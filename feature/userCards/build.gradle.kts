@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
@@ -7,19 +7,13 @@ plugins {
 
 android {
     namespace = "com.ilya.usercards"
-    compileSdk = 34
+    compileSdk = 33
     
     defaultConfig {
-        applicationId = "com.ilya.usercards"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
         
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
     }
     
     buildTypes {
@@ -51,16 +45,15 @@ android {
 dependencies {
     
     // Project
-    implementation(project(":feature:userCards"))
-    implementation(project(":feature:userInfo"))
+    implementation(project(":data"))
     
     // Hilt
     implementation("com.google.dagger:hilt-android:2.44")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0-rc01")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
     
-    
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.8.0")
