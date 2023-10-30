@@ -28,11 +28,11 @@ class MainActivity : ComponentActivity() {
                     })
                 }
                 composable(
-                    Destination.UserInfo.withArgumentNames(KEY_USER_ID),
-                    arguments = listOf(navArgument(KEY_USER_ID) { type = NavType.IntType })
+                    Destination.UserInfo.withArgumentNames(ARG_NAME_USER_ID),
+                    arguments = listOf(navArgument(ARG_NAME_USER_ID) { type = NavType.IntType })
                 ) { backStackEntry ->
                     UserInfoScreen(
-                        userId = backStackEntry.arguments?.getInt(KEY_USER_ID, DEFAULT_USER_ID),
+                        userId = backStackEntry.arguments?.getInt(ARG_NAME_USER_ID, DEFAULT_USER_ID),
                         onGoBackClick = {
                             navController.navigate(Destination.UserCards) {
                                 popUpTo(Destination.UserCards.route)
@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
     }
     
     companion object {
-        const val KEY_USER_ID = "userId"
+        const val ARG_NAME_USER_ID = "userId"
         const val DEFAULT_USER_ID = -1
     }
     
