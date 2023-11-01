@@ -1,5 +1,5 @@
 package com.ilya.usercards
 
-interface UserCardsError {
+sealed interface UserCardsError {
     object ErrorHaveNotInternet : UserCardsError
 }

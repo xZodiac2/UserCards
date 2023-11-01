@@ -4,5 +4,5 @@
     <string name="try_again">Try again</string>
     <string name="back">Back</string>
     <string name="error_have_not_id">User is not found</string>
-    <string name="hair_color">Hair color:</string>
+    <string name="hair_color">Hair color: %s</string>
 </resources>

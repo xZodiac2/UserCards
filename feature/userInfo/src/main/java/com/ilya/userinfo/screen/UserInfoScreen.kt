@@ -114,7 +114,7 @@ private fun ViewUserInfoState(user: User, onBackClick: () -> Unit) {
     ) {
         AsyncImage(model = user.image, contentDescription = null)
         Text(text = "${user.firstName}, ${user.lastName}")
-        Text(text = "${stringResource(id = R.string.hair_color)} ${user.hair.color}")
+        Text(text = stringResource(id = R.string.hair_color, user.hair.color))
         Button(onClick = onBackClick) {
             Text(text = stringResource(id = R.string.back))
         }
