@@ -10,11 +10,10 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-private const val BASE_URL = "https://dummyjson.com/"
-
 @Module
 @InstallIn(ViewModelComponent::class)
 object RetrofitModule {
+    
     @Provides
     internal fun provideApi(): DummyJsonApi {
         val client = OkHttpClient.Builder()
@@ -24,7 +23,7 @@ object RetrofitModule {
         val retrofit = Retrofit.Builder()
             .client(client)
             .addConverterFactory(MoshiConverterFactory.create())
-            .baseUrl(BASE_URL)
+            .baseUrl(DummyJsonApi.BASE_URL)
             .build()
         
         return retrofit.create(DummyJsonApi::class.java)

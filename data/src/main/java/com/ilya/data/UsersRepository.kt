@@ -2,6 +2,8 @@ package com.ilya.data
 
 import com.ilya.data.retrofit.DummyJsonApi
 import com.ilya.data.retrofit.models.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class UsersRepository @Inject internal constructor(
@@ -9,11 +11,11 @@ class UsersRepository @Inject internal constructor(
 ) {
     
     suspend fun getAllUsers(): List<User> {
-        return api.getAllUser().users
+        return withContext(Dispatchers.IO) { api.getAllUsers().users }
     }
     
     suspend fun getUserById(id: Int): User {
-        return api.getUserById(id)
+        return withContext(Dispatchers.IO) { api.getUserById(id) }
     }
     
 }
