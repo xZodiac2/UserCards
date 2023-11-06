@@ -19,28 +19,39 @@ class UserInfoViewModel @Inject constructor(
     private val _stateFlow = MutableStateFlow<UserInfoState>(UserInfoState.Loading)
     val stateFlow = _stateFlow.asStateFlow()
     
+    private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
+        _stateFlow.value = UserInfoState.Error(UserInfoError.NoInternet)
+    }
+    
     fun handleEvent(event: UserInfoScreenEvent) {
         when (event) {
-            is UserInfoScreenEvent.Start -> getUserById(event.userId)
-            is UserInfoScreenEvent.HaveNotId -> onHaveNotId()
+            is UserInfoScreenEvent.Start -> onStart(event.userId)
+            is UserInfoScreenEvent.Retry -> onRetry(event.userId)
         }
     }
     
-    private fun getUserById(id: Int) {
-        _stateFlow.value = UserInfoState.Loading
-        
-        val exceptionHandler = CoroutineExceptionHandler { _, _ ->
-            _stateFlow.value = UserInfoState.Error(UserInfoError.ErrorHaveNotInternet)
+    private fun onStart(userId: Int) {
+        if (_stateFlow.value == UserInfoState.Loading) {
+            getUserById(userId)
         }
+    }
+    
+    private fun onRetry(userId: Int) {
+        getUserById(userId)
+    }
+    
+    private fun getUserById(id: Int) {
+        if (id == DEFAULT_USER_ID) {
+            _stateFlow.value = UserInfoState.Error(UserInfoError.NoId)
+            return
+        }
+        
+        _stateFlow.value = UserInfoState.Loading
         
         viewModelScope.launch(exceptionHandler) {
             val user = repository.getUserById(id)
             _stateFlow.value = UserInfoState.ViewUserInfo(user)
         }
-    }
-    
-    private fun onHaveNotId() {
-        _stateFlow.value = UserInfoState.Error(UserInfoError.ErrorHaveNotId)
     }
     
     companion object {

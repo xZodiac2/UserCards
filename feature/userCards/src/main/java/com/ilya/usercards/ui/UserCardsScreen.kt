@@ -38,32 +38,31 @@ fun UserCardsScreen(
     
     when (state) {
         is UserCardsState.Loading -> LoadingState()
-        is UserCardsState.Error -> ErrorState((state as UserCardsState.Error).error, onTryAgainClick = {
-            viewModel.handleEvent(UserCardsScreenEvent.Start)
-        })
+        is UserCardsState.Error -> ErrorState(
+            error = (state as UserCardsState.Error).error,
+            onTryAgainClick = { viewModel.handleEvent(UserCardsScreenEvent.Retry) }
+        )
         
         is UserCardsState.ViewUserCards -> ViewUserCardsState(
-            (state as UserCardsState.ViewUserCards).users,
+            users = (state as UserCardsState.ViewUserCards).users,
             onCardClick = { onCardClick(it) }
         )
     }
     
     LaunchedEffect(key1 = Unit, block = {
-        if (state is UserCardsState.Loading) {
-            viewModel.handleEvent(UserCardsScreenEvent.Start)
-        }
+        viewModel.handleEvent(UserCardsScreenEvent.Start)
     })
 }
 
 @Composable
 private fun ErrorState(error: UserCardsError, onTryAgainClick: () -> Unit) {
     when (error) {
-        is UserCardsError.ErrorHaveNotInternet -> ErrorHaveNotInternet(onTryAgainClick)
+        is UserCardsError.NoInternet -> ErrorNoInternet(onTryAgainClick)
     }
 }
 
 @Composable
-private fun ErrorHaveNotInternet(onTryAgainClick: () -> Unit) {
+private fun ErrorNoInternet(onTryAgainClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -90,7 +89,7 @@ private fun ViewUserCardsState(users: List<User>, onCardClick: (Int) -> Unit) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AsyncImage(model = it.image, contentDescription = null)
-                Text(text = "${it.firstName} ${it.lastName}")
+                Text(text = stringResource(id = R.string.user_name, it.firstName, it.lastName))
             }
         }
     }

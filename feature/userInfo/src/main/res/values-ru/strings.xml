@@ -5,4 +5,5 @@
     <string name="back">Назад</string>
     <string name="error_have_not_id">Пользтватель не найден</string>
     <string name="hair_color">Цвет волос: %s</string>
+    <string name="user_name">%s %s</string>
 </resources>

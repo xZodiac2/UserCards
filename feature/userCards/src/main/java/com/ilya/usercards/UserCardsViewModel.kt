@@ -19,18 +19,29 @@ class UserCardsViewModel @Inject constructor(
     private val _stateFlow = MutableStateFlow<UserCardsState>(UserCardsState.Loading)
     val stateFlow = _stateFlow.asStateFlow()
     
+    private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
+        _stateFlow.value = UserCardsState.Error(UserCardsError.NoInternet)
+    }
+    
     fun handleEvent(event: UserCardsScreenEvent) {
         when (event) {
-            is UserCardsScreenEvent.Start -> getAllUsers()
+            is UserCardsScreenEvent.Start -> onStart()
+            is UserCardsScreenEvent.Retry -> onRetry()
         }
+    }
+    
+    private fun onStart() {
+        if (_stateFlow.value == UserCardsState.Loading) {
+            getAllUsers()
+        }
+    }
+    
+    private fun onRetry() {
+        getAllUsers()
     }
     
     private fun getAllUsers() {
         _stateFlow.value = UserCardsState.Loading
-        
-        val exceptionHandler = CoroutineExceptionHandler { _, _ ->
-            _stateFlow.value = UserCardsState.Error(UserCardsError.ErrorHaveNotInternet)
-        }
         
         viewModelScope.launch(exceptionHandler) {
             val users = repository.getAllUsers()

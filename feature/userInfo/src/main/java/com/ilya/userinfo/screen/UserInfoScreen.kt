@@ -32,40 +32,37 @@ fun UserInfoScreen(
     onBackClick: () -> Unit,
     viewModel: UserInfoViewModel = hiltViewModel(),
 ) {
-    if (userId == UserInfoViewModel.DEFAULT_USER_ID) {
-        viewModel.handleEvent(UserInfoScreenEvent.HaveNotId)
-    }
-    
     val state by viewModel.stateFlow.collectAsState()
     
     when (state) {
         is UserInfoState.Error -> ErrorState(
             error = (state as UserInfoState.Error).error,
             onBackClick = onBackClick,
-            onTryAgainClick = { viewModel.handleEvent(UserInfoScreenEvent.Start(userId)) }
+            onTryAgainClick = { viewModel.handleEvent(UserInfoScreenEvent.Retry(userId)) }
         )
         
         is UserInfoState.Loading -> LoadingState()
-        is UserInfoState.ViewUserInfo -> ViewUserInfoState((state as UserInfoState.ViewUserInfo).user, onBackClick)
+        is UserInfoState.ViewUserInfo -> ViewUserInfoState(
+            user = (state as UserInfoState.ViewUserInfo).user,
+            onBackClick = onBackClick
+        )
     }
     
     LaunchedEffect(key1 = Unit, block = {
-        if (state is UserInfoState.Loading && userId != UserInfoViewModel.DEFAULT_USER_ID) {
-            viewModel.handleEvent(UserInfoScreenEvent.Start(userId))
-        }
+        viewModel.handleEvent(UserInfoScreenEvent.Start(userId))
     })
 }
 
 @Composable
 private fun ErrorState(error: UserInfoError, onBackClick: () -> Unit, onTryAgainClick: () -> Unit) {
     when (error) {
-        is UserInfoError.ErrorHaveNotId -> ErrorHaveNotId(onBackClick)
-        is UserInfoError.ErrorHaveNotInternet -> ErrorHaveNotInternet(onBackClick, onTryAgainClick)
+        is UserInfoError.NoId -> ErrorNoId(onBackClick)
+        is UserInfoError.NoInternet -> ErrorNoInternet(onBackClick, onTryAgainClick)
     }
 }
 
 @Composable
-private fun ErrorHaveNotInternet(onBackClick: () -> Unit, onTryAgainClick: () -> Unit) {
+private fun ErrorNoInternet(onBackClick: () -> Unit, onTryAgainClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -87,7 +84,7 @@ private fun ErrorHaveNotInternet(onBackClick: () -> Unit, onTryAgainClick: () ->
 }
 
 @Composable
-private fun ErrorHaveNotId(onBackClick: () -> Unit) {
+private fun ErrorNoId(onBackClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -113,7 +110,7 @@ private fun ViewUserInfoState(user: User, onBackClick: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AsyncImage(model = user.image, contentDescription = null)
-        Text(text = "${user.firstName}, ${user.lastName}")
+        Text(text = stringResource(id = R.string.user_name, user.firstName, user.lastName))
         Text(text = stringResource(id = R.string.hair_color, user.hair.color))
         Button(onClick = onBackClick) {
             Text(text = stringResource(id = R.string.back))

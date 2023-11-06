@@ -5,4 +5,5 @@
     <string name="back">Back</string>
     <string name="error_have_not_id">User is not found</string>
     <string name="hair_color">Hair color: %s</string>
+    <string name="user_name">%s %s</string>
 </resources>
