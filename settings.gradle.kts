@@ -13,5 +13,8 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "UserCards2"
+rootProject.name = "UserCards"
 include(":app")
+include(":data")
+include(":feature:userCards")
+include(":feature:userInfo")

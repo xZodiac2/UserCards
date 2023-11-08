@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_have_not_internet">Не удаётся получить информацию пользователя. Пожалуйста проверьте подключение к интернету и попробуйте снова</string>
+    <string name="try_again">Попробовать снова</string>
+    <string name="back">Назад</string>
+    <string name="error_have_not_id">Пользтватель не найден</string>
+    <string name="hair_color">Цвет волос: %s</string>
+    <string name="user_name">%s %s</string>
+</resources>

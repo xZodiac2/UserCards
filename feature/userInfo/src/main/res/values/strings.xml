@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_have_not_internet">No able to get user info. Please check your internet connection and try again</string>
+    <string name="try_again">Try again</string>
+    <string name="back">Back</string>
+    <string name="error_have_not_id">User is not found</string>
+    <string name="hair_color">Hair color: %s</string>
+    <string name="user_name">%s %s</string>
+</resources>
