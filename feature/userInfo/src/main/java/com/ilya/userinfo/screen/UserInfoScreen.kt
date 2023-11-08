@@ -1,5 +1,6 @@
 package com.ilya.userinfo.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,21 +33,23 @@ fun UserInfoScreen(
     onBackClick: () -> Unit,
     viewModel: UserInfoViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.stateFlow.collectAsState()
+    val state = viewModel.stateFlow.collectAsState()
     
-    when (state) {
+    when (val stateValue = state.value) {
         is UserInfoState.Error -> ErrorState(
-            error = (state as UserInfoState.Error).error,
+            error = stateValue.error,
             onBackClick = onBackClick,
             onTryAgainClick = { viewModel.handleEvent(UserInfoScreenEvent.Retry(userId)) }
         )
         
         is UserInfoState.Loading -> LoadingState()
         is UserInfoState.ViewUserInfo -> ViewUserInfoState(
-            user = (state as UserInfoState.ViewUserInfo).user,
+            user = stateValue.user,
             onBackClick = onBackClick
         )
     }
+    
+    BackHandler(onBack = onBackClick)
     
     LaunchedEffect(key1 = Unit, block = {
         viewModel.handleEvent(UserInfoScreenEvent.Start(userId))

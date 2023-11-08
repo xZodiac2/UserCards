@@ -15,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,18 +33,18 @@ fun UserCardsScreen(
     onCardClick: (Int) -> Unit,
     viewModel: UserCardsViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.stateFlow.collectAsState()
+    val state = viewModel.stateFlow.collectAsState()
     
-    when (state) {
+    when (val stateValue = state.value) {
         is UserCardsState.Loading -> LoadingState()
         is UserCardsState.Error -> ErrorState(
-            error = (state as UserCardsState.Error).error,
+            error = stateValue.error,
             onTryAgainClick = { viewModel.handleEvent(UserCardsScreenEvent.Retry) }
         )
         
         is UserCardsState.ViewUserCards -> ViewUserCardsState(
-            users = (state as UserCardsState.ViewUserCards).users,
-            onCardClick = { onCardClick(it) }
+            users = stateValue.users,
+            onCardClick = onCardClick
         )
     }
     
